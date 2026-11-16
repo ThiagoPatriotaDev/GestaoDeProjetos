@@ -26,7 +26,11 @@ class DetailActivity : AppCompatActivity() {
             intent.getSerializableExtra("PROJECT") as? Project
         }
 
+        findViewById<android.view.View>(R.id.tvBackDetail).setOnClickListener { finish() }
+
         projeto?.let {
+            findViewById<TextView>(R.id.tvDetailStatus).text =
+                if (it.isCompleted) "FINALIZADO" else "EM ANDAMENTO"
             findViewById<TextView>(R.id.tvDetailNomeProjeto).text = it.nome
             findViewById<TextView>(R.id.tvDetailDisciplinaTitle).text = getString(R.string.label_disciplina, it.disciplina)
             

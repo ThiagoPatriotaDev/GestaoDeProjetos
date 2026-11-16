@@ -1,253 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/black"
-                android:textSize="32sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/novo_projeto"
-                android:textColor="@color/text_secondary"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/nome_projeto"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etNomeProjeto"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext"
-                android:hint="@string/hint_nome_projeto"
-                android:inputType="text"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/disciplina"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etDisciplina"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext"
-                android:hint="@string/hint_disciplina"
-                android:inputType="text"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/data_inicio"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etDataInicio"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext"
-                android:drawableStart="@drawable/ic_calendar"
-                android:drawablePadding="8dp"
-                android:hint="@string/hint_data"
-                android:inputType="text"
-                android:maxLength="10"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/data_entrega"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etDataEntrega"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext"
-                android:drawableStart="@drawable/ic_calendar"
-                android:drawablePadding="8dp"
-                android:hint="@string/hint_data"
-                android:inputType="text"
-                android:maxLength="10"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/dia_estudo"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spDiaEstudo"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/horario_inicio"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/etHorarioInicio"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_edittext"
-                        android:drawableStart="@drawable/ic_clock"
-                        android:drawablePadding="8dp"
-                        android:hint="@string/hint_horario"
-                        android:inputType="text"
-                        android:maxLength="5"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp" />
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background_light">
+    <ScrollView android:layout_width="0dp" android:layout_height="0dp" android:scrollbars="none" android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@id/formActions"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="22dp" android:paddingTop="25dp" android:paddingBottom="20dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="←  VOLTAR AO PAINEL" android:textColor="@color/brand" android:textSize="12sp" android:textStyle="bold" android:letterSpacing="0.09" android:id="@+id/tvBackForm" android:clickable="true" android:focusable="true" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="Comece algo incrível." android:textColor="@color/ink" android:textSize="28sp" android:textStyle="bold" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="Organize suas ideias. O restante fica mais leve." android:textColor="@color/ink_secondary" android:textSize="14sp" />
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="25dp"
+                app:cardBackgroundColor="@color/white" app:cardCornerRadius="22dp" app:cardElevation="0dp" app:strokeColor="@color/card_border" app:strokeWidth="1dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="19dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="01  •  O essencial" android:textColor="@color/brand" android:textStyle="bold" android:textSize="15sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="Como vamos chamar esse projeto?" android:textColor="@color/ink_secondary" android:textSize="12sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="NOME DO PROJETO *" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                    <EditText android:id="@+id/etNomeProjeto" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:background="@drawable/bg_edittext" android:hint="Ex.: Trabalho de engenharia de software" android:inputType="text" android:textSize="14sp" android:textColor="@color/ink" android:textColorHint="@color/ink_secondary" android:paddingStart="15dp" android:paddingEnd="15dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="DISCIPLINA" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                    <EditText android:id="@+id/etDisciplina" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:background="@drawable/bg_edittext" android:hint="Ex.: Programação mobile" android:inputType="text" android:textSize="14sp" android:textColor="@color/ink" android:textColorHint="@color/ink_secondary" android:paddingStart="15dp" android:paddingEnd="15dp" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="16dp"
-                    android:layout_height="0dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/horario_termino"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/etHorarioTermino"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_edittext"
-                        android:drawableStart="@drawable/ic_clock"
-                        android:drawablePadding="8dp"
-                        android:hint="@string/hint_horario"
-                        android:inputType="text"
-                        android:maxLength="5"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp" />
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp"
+                app:cardBackgroundColor="@color/white" app:cardCornerRadius="22dp" app:cardElevation="0dp" app:strokeColor="@color/card_border" app:strokeWidth="1dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="19dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="02  •  Seu planejamento" android:textColor="@color/brand" android:textStyle="bold" android:textSize="15sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="Defina as datas e reserve um tempo para focar." android:textColor="@color/ink_secondary" android:textSize="12sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="DATA DE INÍCIO" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                    <EditText android:id="@+id/etDataInicio" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:background="@drawable/bg_edittext" android:hint="dd/mm/aaaa" android:inputType="date" android:textSize="14sp" android:textColor="@color/ink" android:textColorHint="@color/ink_secondary" android:paddingStart="15dp" android:paddingEnd="15dp" android:maxLength="10" android:drawableStart="@drawable/ic_calendar" android:drawablePadding="9dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="DATA DE ENTREGA" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                    <EditText android:id="@+id/etDataEntrega" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:background="@drawable/bg_edittext" android:hint="dd/mm/aaaa" android:inputType="date" android:textSize="14sp" android:textColor="@color/ink" android:textColorHint="@color/ink_secondary" android:paddingStart="15dp" android:paddingEnd="15dp" android:maxLength="10" android:drawableStart="@drawable/ic_calendar" android:drawablePadding="9dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="DIA DE ESTUDO" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                    <Spinner android:id="@+id/spDiaEstudo" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:paddingHorizontal="12dp" android:background="@drawable/bg_edittext" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="HORÁRIO INICIAL" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                            <EditText android:id="@+id/etHorarioInicio" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:background="@drawable/bg_edittext" android:hint="hh:mm" android:inputType="time" android:textSize="14sp" android:textColor="@color/ink" android:textColorHint="@color/ink_secondary" android:paddingStart="15dp" android:paddingEnd="15dp" android:maxLength="5" android:drawableStart="@drawable/ic_clock" android:drawablePadding="9dp" />
+                        </LinearLayout>
+                        <View android:layout_width="12dp" android:layout_height="1dp" />
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="HORÁRIO FINAL" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                            <EditText android:id="@+id/etHorarioTermino" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:background="@drawable/bg_edittext" android:hint="hh:mm" android:inputType="time" android:textSize="14sp" android:textColor="@color/ink" android:textColorHint="@color/ink_secondary" android:paddingStart="15dp" android:paddingEnd="15dp" android:maxLength="5" android:drawableStart="@drawable/ic_clock" android:drawablePadding="9dp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/observacoes"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etObservacoes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="80dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext"
-                android:hint="Adicione observações sobre o projeto (opcional)..."
-                android:inputType="textMultiLine"
-                android:gravity="top|start"
-                android:padding="12dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnSalvar"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/grey_dark"
-                    android:text="@string/salvar"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white" />
-
-                <View
-                    android:layout_width="16dp"
-                    android:layout_height="0dp" />
-
-                <Button
-                    android:id="@+id/btnCancelar"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/grey_light"
-                    android:text="@string/cancelar"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp"
+                app:cardBackgroundColor="@color/white" app:cardCornerRadius="22dp" app:cardElevation="0dp" app:strokeColor="@color/card_border" app:strokeWidth="1dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="19dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="03  •  Notas extras" android:textColor="@color/brand" android:textStyle="bold" android:textSize="15sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="OBSERVAÇÕES (OPCIONAL)" android:layout_marginTop="17dp" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/ink" />
+                    <EditText android:id="@+id/etObservacoes" android:layout_width="match_parent" android:layout_height="110dp" android:layout_marginTop="8dp" android:background="@drawable/bg_edittext" android:hint="Adicione ideias, lembretes ou detalhes importantes..." android:inputType="textMultiLine" android:gravity="top|start" android:padding="15dp" android:textSize="14sp" android:textColor="@color/ink" android:textColorHint="@color/ink_secondary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
-
+    <LinearLayout android:id="@+id/formActions" android:layout_width="0dp" android:layout_height="wrap_content" android:paddingHorizontal="22dp" android:paddingBottom="12dp" android:orientation="horizontal" android:background="@color/background_light"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnCancelar" android:layout_width="wrap_content" android:layout_height="57dp" android:text="Cancelar" android:textAllCaps="false" android:textColor="@color/ink_secondary" android:backgroundTint="@color/grey_light" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="17dp"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnSalvar" android:layout_width="0dp" android:layout_height="57dp" android:layout_marginStart="10dp" android:layout_weight="1" android:text="Salvar projeto" android:textAllCaps="false" android:textStyle="bold" android:textSize="15sp" android:textColor="@color/white" android:backgroundTint="@color/brand" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="17dp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

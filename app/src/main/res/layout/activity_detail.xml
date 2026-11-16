@@ -1,179 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/black"
-                android:textSize="32sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/detalhes_projeto"
-                android:textColor="@color/text_secondary"
-                android:textSize="18sp" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/grey_medium"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/grey_light"
-                        android:contentDescription="@null"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_list" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tvDetailNomeProjeto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            tools:text="Projeto de Mobile" />
-
-                        <TextView
-                            android:id="@+id/tvDetailDisciplinaTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="14sp"
-                            tools:text="Disciplina: Desenvolvimento Mobile" />
-                    </LinearLayout>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background_light">
+    <ScrollView android:layout_width="0dp" android:layout_height="0dp" android:scrollbars="none"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@id/detailActions"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingHorizontal="22dp" android:paddingTop="25dp" android:paddingBottom="20dp" android:orientation="vertical">
+            <TextView android:id="@+id/tvBackDetail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="←  MEUS PROJETOS" android:textColor="@color/brand" android:textSize="12sp" android:textStyle="bold" android:letterSpacing="0.09" android:clickable="true" android:focusable="true" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="Cada detalhe conta." android:textColor="@color/ink" android:textSize="28sp" android:textStyle="bold" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="Seu plano, do começo à entrega." android:textColor="@color/ink_secondary" android:textSize="14sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="25dp" android:background="@drawable/bg_hero" android:padding="23dp" android:orientation="vertical">
+                <TextView android:id="@+id/tvDetailStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EM ANDAMENTO" android:textColor="#C5B8FF" android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.12" />
+                <TextView android:id="@+id/tvDetailNomeProjeto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="17dp" android:text="Projeto" android:textSize="25sp" android:textStyle="bold" android:textColor="@color/white" />
+                <TextView android:id="@+id/tvDetailDisciplinaTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Disciplina" android:textSize="13sp" android:textColor="#C7C2E1" />
+            </LinearLayout>
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" app:cardCornerRadius="22dp" app:cardBackgroundColor="@color/white" app:cardElevation="0dp" app:strokeColor="@color/card_border" app:strokeWidth="1dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Informações do projeto" android:textColor="@color/ink" android:textSize="16sp" android:textStyle="bold" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Projeto" android:textColor="@color/ink_secondary" android:textSize="13sp" />
+<TextView android:id="@+id/tvDetailProjetoValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="3" /></LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_border" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Disciplina" android:textColor="@color/ink_secondary" android:textSize="13sp" />
+<TextView android:id="@+id/tvDetailDisciplinaValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="3" /></LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/grey_medium"
-                app:strokeWidth="1dp">
-
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:columnCount="2"
-                    android:padding="16dp">
-
-                    <TextView android:text="@string/nome_projeto" android:textStyle="bold" android:textColor="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:id="@+id/tvDetailProjetoValue" android:layout_gravity="end" tools:text="Projeto de Mobile"/>
-
-                    <TextView android:text="@string/disciplina" android:textStyle="bold" android:textColor="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:id="@+id/tvDetailDisciplinaValue" android:layout_gravity="end" tools:text="Desenvolvimento Mobile"/>
-
-                    <TextView android:text="@string/data_inicio" android:textStyle="bold" android:textColor="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:id="@+id/tvDetailInicioValue" android:layout_gravity="end" tools:text="05/09"/>
-
-                    <TextView android:text="@string/data_entrega" android:textStyle="bold" android:textColor="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:id="@+id/tvDetailEntregaValue" android:layout_gravity="end" tools:text="18/09"/>
-
-                    <TextView android:text="@string/dia_estudo" android:textStyle="bold" android:textColor="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:id="@+id/tvDetailDiaEstudoValue" android:layout_gravity="end" tools:text="10/09"/>
-
-                    <TextView android:text="@string/horario_inicio" android:textStyle="bold" android:textColor="@color/black"/>
-                    <TextView android:id="@+id/tvDetailHorarioValue" android:layout_gravity="end" tools:text="19:00 - 21:00"/>
-                </GridLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/grey_medium"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/observacoes"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvDetailObservacoes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:textColor="@color/text_secondary"
-                        tools:text="Nenhuma observação." />
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" app:cardCornerRadius="22dp" app:cardBackgroundColor="@color/white" app:cardElevation="0dp" app:strokeColor="@color/card_border" app:strokeWidth="1dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Cronograma" android:textColor="@color/ink" android:textSize="16sp" android:textStyle="bold" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Início" android:textColor="@color/ink_secondary" android:textSize="13sp" />
+<TextView android:id="@+id/tvDetailInicioValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="3" /></LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_border" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Entrega" android:textColor="@color/ink_secondary" android:textSize="13sp" />
+<TextView android:id="@+id/tvDetailEntregaValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="3" /></LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_border" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Dia de estudo" android:textColor="@color/ink_secondary" android:textSize="13sp" />
+<TextView android:id="@+id/tvDetailDiaEstudoValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="3" /></LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_border" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Horário reservado" android:textColor="@color/ink_secondary" android:textSize="13sp" />
+<TextView android:id="@+id/tvDetailHorarioValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="3" /></LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAdicionarCalendario"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="@color/grey_dark"
-                app:icon="@drawable/ic_calendar"
-                android:text="@string/adicionar_calendario"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnVoltar"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/grey_light"
-                android:text="@string/voltar"
-                android:textAllCaps="false"
-                android:textColor="@color/black" />
-
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" app:cardCornerRadius="22dp" app:cardBackgroundColor="@color/white" app:cardElevation="0dp" app:strokeColor="@color/card_border" app:strokeWidth="1dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Anotações" android:textColor="@color/ink" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:id="@+id/tvDetailObservacoes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textColor="@color/ink_secondary" android:textSize="14sp" android:lineSpacingExtra="3dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
-
+    <LinearLayout android:id="@+id/detailActions" android:layout_width="0dp" android:layout_height="wrap_content" android:background="@color/background_light" android:orientation="horizontal" android:paddingHorizontal="22dp" android:paddingBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnVoltar" android:layout_width="wrap_content" android:layout_height="57dp" android:text="Voltar" android:textColor="@color/ink_secondary" android:backgroundTint="@color/grey_light" android:textAllCaps="false" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="17dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnAdicionarCalendario" android:layout_width="0dp" android:layout_height="57dp" android:layout_weight="1" android:layout_marginStart="9dp" android:text="Adicionar ao calendário" android:textSize="12sp" android:textAllCaps="false" android:textStyle="bold" android:textColor="@color/white" android:backgroundTint="@color/brand" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="17dp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

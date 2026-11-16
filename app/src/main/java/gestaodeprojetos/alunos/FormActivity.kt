@@ -24,6 +24,7 @@ class FormActivity : AppCompatActivity() {
 
         setupSpinners()
         setupMasks()
+        findViewById<android.view.View>(R.id.tvBackForm).setOnClickListener { finish() }
 
         findViewById<Button>(R.id.btnSalvar).setOnClickListener {
             val projeto = coletarDados()
@@ -56,7 +57,7 @@ class FormActivity : AppCompatActivity() {
     }
 
     private fun coletarDados(): Project? {
-        val nome = findViewById<EditText>(R.id.etNomeProjeto).text.toString()
+        val nome = findViewById<EditText>(R.id.etNomeProjeto).text.toString().trim()
         if (nome.isEmpty()) return null
 
         val disciplina = findViewById<EditText>(R.id.etDisciplina).text.toString()
@@ -99,8 +100,8 @@ class FormActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (isUpdating) return
 
-                val clean = s.toString().replace("/", "")
-                val oldClean = oldText.replace("/", "")
+                val clean = s.toString().filter { it.isDigit() }.take(8)
+                val oldClean = oldText.filter { it.isDigit() }
 
                 if (clean.length == oldClean.length) return
 
@@ -138,8 +139,8 @@ class FormActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (isUpdating) return
 
-                val clean = s.toString().replace(":", "")
-                val oldClean = oldText.replace(":", "")
+                val clean = s.toString().filter { it.isDigit() }.take(4)
+                val oldClean = oldText.filter { it.isDigit() }
 
                 if (clean.length == oldClean.length) return
 
