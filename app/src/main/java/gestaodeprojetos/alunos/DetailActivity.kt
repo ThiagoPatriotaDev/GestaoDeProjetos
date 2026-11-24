@@ -1,50 +1,68 @@
 package gestaodeprojetos.alunos
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.CalendarContract
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import gestaodeprojetos.alunos.R
+import androidx.lifecycle.lifecycleScope
+import gestaodeprojetos.alunos.calendar.CalendarIntentHelper
+import gestaodeprojetos.alunos.cloud.CloudSyncOutcome
+import gestaodeprojetos.alunos.cloud.SupabaseBackupRepository
+import gestaodeprojetos.alunos.db.AppDatabase
 import gestaodeprojetos.alunos.model.Project
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import kotlinx.coroutines.launch
 
 class DetailActivity : AppCompatActivity() {
+
+    private val database by lazy { AppDatabase.getDatabase(this) }
+    private val backupRepository by lazy { SupabaseBackupRepository(this) }
+    private lateinit var tvDetailCloudStatus: TextView
+    private var projetoAtual: Project? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        val projeto = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        tvDetailCloudStatus = findViewById(R.id.tvDetailCloudStatus)
+
+        val projetoIntent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra("PROJECT", Project::class.java)
         } else {
             @Suppress("DEPRECATION")
             intent.getSerializableExtra("PROJECT") as? Project
         }
 
-        findViewById<android.view.View>(R.id.tvBackDetail).setOnClickListener { finish() }
+        findViewById<View>(R.id.tvBackDetail).setOnClickListener { finish() }
 
-        projeto?.let {
-            findViewById<TextView>(R.id.tvDetailStatus).text =
-                if (it.isCompleted) "FINALIZADO" else "EM ANDAMENTO"
-            findViewById<TextView>(R.id.tvDetailNomeProjeto).text = it.nome
-            findViewById<TextView>(R.id.tvDetailDisciplinaTitle).text = getString(R.string.label_disciplina, it.disciplina)
-            
-            findViewById<TextView>(R.id.tvDetailProjetoValue).text = it.nome
-            findViewById<TextView>(R.id.tvDetailDisciplinaValue).text = it.disciplina
-            findViewById<TextView>(R.id.tvDetailInicioValue).text = it.dataInicio
-            findViewById<TextView>(R.id.tvDetailEntregaValue).text = it.dataEntrega
-            findViewById<TextView>(R.id.tvDetailDiaEstudoValue).text = it.diaEstudo
-            findViewById<TextView>(R.id.tvDetailHorarioValue).text = "${it.horarioInicio} - ${it.horarioTermino}"
-            
-            findViewById<TextView>(R.id.tvDetailObservacoes).text = it.observacoes.ifEmpty { getString(R.string.no_observations) }
+        projetoIntent?.let { inicial ->
+            projetoAtual = inicial
+            preencherDetalhes(inicial)
 
-            findViewById<Button>(R.id.btnAdicionarCalendario).setOnClickListener { _ ->
-                adicionarAoCalendario(it)
+            lifecycleScope.launch {
+                val atualizado = database.projectDao().getById(inicial.id)
+                if (atualizado != null) {
+                    projetoAtual = atualizado
+                    preencherDetalhes(atualizado)
+                }
+            }
+        }
+
+        findViewById<View>(R.id.rowCloudStatus).setOnClickListener {
+            val projeto = projetoAtual ?: return@setOnClickListener
+            if (!projeto.isSynced) {
+                sincronizarProjetoNaNuvem(projeto)
+            } else {
+                Toast.makeText(this, "Este projeto já está salvo na nuvem (Supabase).", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        findViewById<Button>(R.id.btnAdicionarCalendario).setOnClickListener {
+            val projeto = projetoAtual ?: return@setOnClickListener
+            val abriu = CalendarIntentHelper.openCalendarInsert(this, projeto)
+            if (!abriu) {
+                Toast.makeText(this, getString(R.string.no_calendar_app), Toast.LENGTH_LONG).show()
             }
         }
 
@@ -53,79 +71,70 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun adicionarAoCalendario(projeto: Project) {
-        try {
-            val dateFormater = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            
-            // Parse da Data de Início do Projeto
-            val dateInicio = if (projeto.dataInicio.isNotEmpty()) {
-                dateFormater.parse(projeto.dataInicio)
-            } else null
+    private fun preencherDetalhes(projeto: Project) {
+        findViewById<TextView>(R.id.tvDetailStatus).text =
+            if (projeto.isCompleted) "FINALIZADO" else "EM ANDAMENTO"
+        findViewById<TextView>(R.id.tvDetailNomeProjeto).text = projeto.nome
+        findViewById<TextView>(R.id.tvDetailDisciplinaTitle).text =
+            getString(R.string.label_disciplina, projeto.disciplina.ifBlank { "Sem disciplina" })
 
-            // Parse da Data de Entrega/Término do Projeto
-            val dateEntrega = if (projeto.dataEntrega.isNotEmpty()) {
-                dateFormater.parse(projeto.dataEntrega)
-            } else null
-
-            val calendarInicio = Calendar.getInstance()
-            if (dateInicio != null) {
-                calendarInicio.time = dateInicio
-            } else if (dateEntrega != null) {
-                calendarInicio.time = dateEntrega
-            }
-
-            // Configura o horário de início se fornecido (formato hh:mm)
-            if (projeto.horarioInicio.isNotEmpty() && projeto.horarioInicio.contains(":")) {
-                val partesHora = projeto.horarioInicio.split(":")
-                val hora = partesHora[0].toIntOrNull() ?: 0
-                val minuto = partesHora[1].toIntOrNull() ?: 0
-                calendarInicio.set(Calendar.HOUR_OF_DAY, hora)
-                calendarInicio.set(Calendar.MINUTE, minuto)
+        findViewById<TextView>(R.id.tvDetailProjetoValue).text = projeto.nome
+        findViewById<TextView>(R.id.tvDetailDisciplinaValue).text =
+            projeto.disciplina.ifBlank { "Não informada" }
+        findViewById<TextView>(R.id.tvDetailInicioValue).text =
+            projeto.dataInicio.ifBlank { "Não informada" }
+        findViewById<TextView>(R.id.tvDetailEntregaValue).text =
+            projeto.dataEntrega.ifBlank { "Não informada" }
+        findViewById<TextView>(R.id.tvDetailDiaEstudoValue).text = projeto.diaEstudo
+        findViewById<TextView>(R.id.tvDetailHorarioValue).text =
+            if (projeto.horarioInicio.isBlank() && projeto.horarioTermino.isBlank()) {
+                "Não informado"
             } else {
-                calendarInicio.set(Calendar.HOUR_OF_DAY, 9) // Valor padrão: 9h da manhã
-                calendarInicio.set(Calendar.MINUTE, 0)
+                "${projeto.horarioInicio} - ${projeto.horarioTermino}"
             }
 
-            val calendarTermino = Calendar.getInstance()
-            if (dateEntrega != null) {
-                calendarTermino.time = dateEntrega
-            } else if (dateInicio != null) {
-                calendarTermino.time = dateInicio
-            }
+        findViewById<TextView>(R.id.tvDetailObservacoes).text =
+            projeto.observacoes.ifEmpty { getString(R.string.no_observations) }
 
-            // Configura o horário de término se fornecido (formato hh:mm)
-            if (projeto.horarioTermino.isNotEmpty() && projeto.horarioTermino.contains(":")) {
-                val partesHora = projeto.horarioTermino.split(":")
-                val hora = partesHora[0].toIntOrNull() ?: 0
-                val minuto = partesHora[1].toIntOrNull() ?: 0
-                calendarTermino.set(Calendar.HOUR_OF_DAY, hora)
-                calendarTermino.set(Calendar.MINUTE, minuto)
-            } else {
-                if (dateEntrega == null || projeto.dataInicio == projeto.dataEntrega) {
-                    // Se for no mesmo dia e não tiver hora de término, coloca 1 hora após o início
-                    calendarTermino.timeInMillis = calendarInicio.timeInMillis + (60 * 60 * 1000)
-                } else {
-                    // Se for em dias diferentes, coloca no final do dia de entrega (ex: 18h)
-                    calendarTermino.set(Calendar.HOUR_OF_DAY, 18)
-                    calendarTermino.set(Calendar.MINUTE, 0)
+        if (projeto.isSynced) {
+            tvDetailCloudStatus.text = getString(R.string.cloud_synced)
+            tvDetailCloudStatus.setTextColor(getColor(R.color.mint))
+        } else {
+            tvDetailCloudStatus.text = getString(R.string.cloud_not_synced)
+            tvDetailCloudStatus.setTextColor(getColor(R.color.brand))
+        }
+    }
+
+    private fun sincronizarProjetoNaNuvem(projeto: Project) {
+        tvDetailCloudStatus.text = getString(R.string.cloud_syncing)
+        tvDetailCloudStatus.setTextColor(getColor(R.color.ink_secondary))
+
+        lifecycleScope.launch {
+            when (val outcome = backupRepository.updateAndBackup(projeto)) {
+                is CloudSyncOutcome.Synced -> {
+                    projetoAtual = outcome.project
+                    preencherDetalhes(outcome.project)
+                    Toast.makeText(
+                        this@DetailActivity,
+                        "Projeto sincronizado no Supabase!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is CloudSyncOutcome.NotConfigured -> {
+                    preencherDetalhes(outcome.project)
+                    Toast.makeText(
+                        this@DetailActivity,
+                        "Configure SUPABASE_URL e SUPABASE_ANON_KEY em SupabaseConfig.kt.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                is CloudSyncOutcome.Error -> {
+                    preencherDetalhes(outcome.project)
+                    Toast.makeText(this@DetailActivity, outcome.message, Toast.LENGTH_LONG).show()
                 }
             }
-
-            // Cria a Intent nativa do sistema para inserção de eventos no Calendário
-            val intent = Intent(Intent.ACTION_INSERT).apply {
-                data = CalendarContract.Events.CONTENT_URI
-                putExtra(CalendarContract.Events.TITLE, "Desenvolvimento e Entrega: ${projeto.nome}")
-                putExtra(CalendarContract.Events.DESCRIPTION, "Disciplina: ${projeto.disciplina}\nDia de estudo definido: ${projeto.diaEstudo}")
-                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarInicio.timeInMillis)
-                putExtra(CalendarContract.EXTRA_EVENT_END_TIME, calendarTermino.timeInMillis)
-                putExtra(CalendarContract.Events.STATUS, 1) // Confirmado
-            }
-
-            startActivity(intent)
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "Erro ao abrir o calendário. Verifique os formatos de data/hora.", Toast.LENGTH_LONG).show()
         }
     }
 }

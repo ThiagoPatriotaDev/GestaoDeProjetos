@@ -16,5 +16,7 @@ data class Project(
     val horarioInicio: String,
     val horarioTermino: String,
     val observacoes: String = "",
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val remoteId: String? = null,
+    val isSynced: Boolean = false
 ) : Serializable

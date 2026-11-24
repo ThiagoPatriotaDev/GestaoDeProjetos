@@ -40,4 +40,17 @@
     <string name="all_projects">Todos</string>
     <string name="empty_active">Nenhum projeto em andamento</string>
     <string name="empty_finished">Você ainda não concluiu projetos</string>
+    <string name="cloud_backup_badge">☁ Nuvem</string>
+    <string name="cloud_backup_label">Backup na nuvem</string>
+    <string name="cloud_synced">✓ Sincronizado</string>
+    <string name="cloud_not_synced">Apenas local (toque para enviar)</string>
+    <string name="cloud_syncing">Sincronizando…</string>
+    <string name="section_calendar_cloud">04  •  Agenda e Backup na Nuvem</string>
+    <string name="open_calendar_on_save_title">Agendar no calendário ao salvar</string>
+    <string name="open_calendar_on_save_subtitle">Abre o aplicativo de calendário com título, recorrência semanal, horários e observações.</string>
+    <string name="cloud_backup_auto_hint">☁ Backup automático no Supabase ao salvar o projeto.</string>
+    <string name="saving_to_cloud">Salvando na nuvem…</string>
+    <string name="project_saved_cloud">Projeto salvo e sincronizado no Supabase!</string>
+    <string name="project_saved_cloud_pending">Projeto salvo localmente. Backup pendente na nuvem.</string>
+    <string name="no_calendar_app">Nenhum aplicativo de calendário encontrado no dispositivo.</string>
 </resources>
