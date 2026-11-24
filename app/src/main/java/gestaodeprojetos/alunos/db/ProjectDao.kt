@@ -12,8 +12,17 @@ interface ProjectDao {
     @Query("SELECT * FROM projects WHERE isCompleted = 0")
     fun getAllActive(): Flow<List<Project>>
 
+    @Query("SELECT * FROM projects ORDER BY id DESC")
+    suspend fun getAllSnapshot(): List<Project>
+
+    @Query("SELECT * FROM projects WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): Project?
+
+    @Query("SELECT * FROM projects WHERE remoteId = :remoteId LIMIT 1")
+    suspend fun getByRemoteId(remoteId: String): Project?
+
     @Insert
-    suspend fun insert(project: Project)
+    suspend fun insert(project: Project): Long
 
     @Update
     suspend fun update(project: Project)

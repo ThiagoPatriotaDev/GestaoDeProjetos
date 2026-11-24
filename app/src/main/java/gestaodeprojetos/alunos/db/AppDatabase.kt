@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import gestaodeprojetos.alunos.model.Project
 
-@Database(entities = [Project::class], version = 1)
+@Database(entities = [Project::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun projectDao(): ProjectDao
 
