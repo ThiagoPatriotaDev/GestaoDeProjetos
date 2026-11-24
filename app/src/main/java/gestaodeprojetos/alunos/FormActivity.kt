@@ -10,37 +10,104 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import gestaodeprojetos.alunos.db.AppDatabase
+import com.google.android.material.switchmaterial.SwitchMaterial
+import gestaodeprojetos.alunos.calendar.CalendarIntentHelper
+import gestaodeprojetos.alunos.cloud.CloudSyncOutcome
+import gestaodeprojetos.alunos.cloud.SupabaseBackupRepository
 import gestaodeprojetos.alunos.model.Project
 import kotlinx.coroutines.launch
 
 class FormActivity : AppCompatActivity() {
 
-    private val database by lazy { AppDatabase.getDatabase(this) }
+    private val backupRepository by lazy { SupabaseBackupRepository(this) }
+    private lateinit var btnSalvar: Button
+    private lateinit var btnCancelar: Button
+    private lateinit var swAbrirCalendario: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
 
+        btnSalvar = findViewById(R.id.btnSalvar)
+        btnCancelar = findViewById(R.id.btnCancelar)
+        swAbrirCalendario = findViewById(R.id.swAbrirCalendario)
+
         setupSpinners()
         setupMasks()
         findViewById<android.view.View>(R.id.tvBackForm).setOnClickListener { finish() }
 
-        findViewById<Button>(R.id.btnSalvar).setOnClickListener {
-            val projeto = coletarDados()
-            if (projeto != null) {
-                lifecycleScope.launch {
-                    database.projectDao().insert(projeto)
-                    Toast.makeText(this@FormActivity, getString(R.string.project_saved), Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.fill_project_name), Toast.LENGTH_SHORT).show()
-            }
+        btnSalvar.setOnClickListener {
+            salvarProjeto()
         }
 
-        findViewById<Button>(R.id.btnCancelar).setOnClickListener {
+        btnCancelar.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun salvarProjeto() {
+        val projeto = coletarDados()
+        if (projeto == null) {
+            Toast.makeText(this, getString(R.string.fill_project_name), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        definirEstadoCarregamento(carregando = true)
+
+        lifecycleScope.launch {
+            val outcome = backupRepository.createAndBackup(projeto)
+            val projetoSalvo = when (outcome) {
+                is CloudSyncOutcome.Synced -> {
+                    Toast.makeText(
+                        this@FormActivity,
+                        getString(R.string.project_saved_cloud),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    outcome.project
+                }
+
+                is CloudSyncOutcome.NotConfigured -> {
+                    Toast.makeText(
+                        this@FormActivity,
+                        getString(R.string.project_saved),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    outcome.project
+                }
+
+                is CloudSyncOutcome.Error -> {
+                    Toast.makeText(
+                        this@FormActivity,
+                        getString(R.string.project_saved_cloud_pending),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    outcome.project
+                }
+            }
+
+            if (swAbrirCalendario.isChecked) {
+                val abriu = CalendarIntentHelper.openCalendarInsert(this@FormActivity, projetoSalvo)
+                if (!abriu) {
+                    Toast.makeText(
+                        this@FormActivity,
+                        getString(R.string.no_calendar_app),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+            finish()
+        }
+    }
+
+    private fun definirEstadoCarregamento(carregando: Boolean) {
+        btnSalvar.isEnabled = !carregando
+        btnCancelar.isEnabled = !carregando
+        swAbrirCalendario.isEnabled = !carregando
+        btnSalvar.text = if (carregando) {
+            getString(R.string.saving_to_cloud)
+        } else {
+            getString(R.string.salvar)
         }
     }
 
@@ -60,13 +127,13 @@ class FormActivity : AppCompatActivity() {
         val nome = findViewById<EditText>(R.id.etNomeProjeto).text.toString().trim()
         if (nome.isEmpty()) return null
 
-        val disciplina = findViewById<EditText>(R.id.etDisciplina).text.toString()
-        val dataInicio = findViewById<EditText>(R.id.etDataInicio).text.toString()
-        val dataEntrega = findViewById<EditText>(R.id.etDataEntrega).text.toString()
+        val disciplina = findViewById<EditText>(R.id.etDisciplina).text.toString().trim()
+        val dataInicio = findViewById<EditText>(R.id.etDataInicio).text.toString().trim()
+        val dataEntrega = findViewById<EditText>(R.id.etDataEntrega).text.toString().trim()
         val diaEstudo = findViewById<Spinner>(R.id.spDiaEstudo).selectedItem.toString()
-        val horarioInicio = findViewById<EditText>(R.id.etHorarioInicio).text.toString()
-        val horarioTermino = findViewById<EditText>(R.id.etHorarioTermino).text.toString()
-        val observacoes = findViewById<EditText>(R.id.etObservacoes).text.toString()
+        val horarioInicio = findViewById<EditText>(R.id.etHorarioInicio).text.toString().trim()
+        val horarioTermino = findViewById<EditText>(R.id.etHorarioTermino).text.toString().trim()
+        val observacoes = findViewById<EditText>(R.id.etObservacoes).text.toString().trim()
 
         return Project(
             nome = nome,
@@ -82,7 +149,15 @@ class FormActivity : AppCompatActivity() {
     }
 
     private fun setupSpinners() {
-        val dias = arrayOf("Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira")
+        val dias = arrayOf(
+            "Segunda-feira",
+            "Terça-feira",
+            "Quarta-feira",
+            "Quinta-feira",
+            "Sexta-feira",
+            "Sábado",
+            "Domingo"
+        )
         val adapterDias = ArrayAdapter(this, android.R.layout.simple_spinner_item, dias)
         adapterDias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         findViewById<Spinner>(R.id.spDiaEstudo).adapter = adapterDias

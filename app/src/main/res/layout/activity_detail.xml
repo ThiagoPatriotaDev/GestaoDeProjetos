@@ -43,6 +43,10 @@
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp">
 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Horário reservado" android:textColor="@color/ink_secondary" android:textSize="13sp" />
 <TextView android:id="@+id/tvDetailHorarioValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="3" /></LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_border" />
+                    <LinearLayout android:id="@+id/rowCloudStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="11dp" android:clickable="true" android:focusable="true">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/cloud_backup_label" android:textColor="@color/ink_secondary" android:textSize="13sp" />
+<TextView android:id="@+id/tvDetailCloudStatus" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.15" android:text="@string/cloud_not_synced" android:textColor="@color/ink_secondary" android:textSize="13sp" android:textStyle="bold" android:gravity="end" android:maxLines="2" /></LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" app:cardCornerRadius="22dp" app:cardBackgroundColor="@color/white" app:cardElevation="0dp" app:strokeColor="@color/card_border" app:strokeWidth="1dp">

@@ -1,17 +1,27 @@
 package gestaodeprojetos.alunos
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import gestaodeprojetos.alunos.cloud.SupabaseBackupRepository
+import gestaodeprojetos.alunos.cloud.SupabaseConfig
+import gestaodeprojetos.alunos.cloud.SyncCodeManager
 import gestaodeprojetos.alunos.db.AppDatabase
 import gestaodeprojetos.alunos.model.Project
 import kotlinx.coroutines.launch
@@ -25,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var containerProjetos: LinearLayout
     private lateinit var emptyProjects: LinearLayout
     private val database by lazy { AppDatabase.getDatabase(this) }
+    private val backupRepository by lazy { SupabaseBackupRepository(this) }
     private var todosProjetos = emptyList<Project>()
     private var mostrarConcluidos = false
 
@@ -34,6 +45,9 @@ class MainActivity : AppCompatActivity() {
         containerProjetos = findViewById(R.id.containerProjetos)
         emptyProjects = findViewById(R.id.emptyProjects)
 
+        findViewById<View>(R.id.btnCloudBackup).setOnClickListener {
+            abrirDialogoBackupNuvem()
+        }
         findViewById<Button>(R.id.btnNovoProjeto).setOnClickListener {
             startActivity(Intent(this, FormActivity::class.java))
         }
@@ -52,6 +66,96 @@ class MainActivity : AppCompatActivity() {
                 todosProjetos = projetos
                 atualizarInterface()
             }
+        }
+
+        // Sincronização silenciosa ao abrir o app quando o Supabase está configurado.
+        if (SupabaseConfig.isConfigured()) {
+            lifecycleScope.launch {
+                backupRepository.syncAll()
+            }
+        }
+    }
+
+    private fun abrirDialogoBackupNuvem() {
+        val codigoAtual = backupRepository.getSyncCode()
+        val total = todosProjetos.size
+        val sincronizados = todosProjetos.count { it.isSynced }
+        val statusConfig = if (SupabaseConfig.isConfigured()) {
+            "Conectado ao Supabase\nProjetos na nuvem: $sincronizados de $total"
+        } else {
+            "Supabase ainda não configurado.\nPreencha SUPABASE_URL e SUPABASE_ANON_KEY em SupabaseConfig.kt."
+        }
+
+        val mensagem = buildString {
+            append(statusConfig)
+            append("\n\nSeu código de sincronização:\n")
+            append(codigoAtual)
+            append("\n\nUse esse mesmo código em outro aparelho para restaurar seus projetos.")
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Backup na Nuvem (Supabase)")
+            .setMessage(mensagem)
+            .setPositiveButton("Sincronizar agora") { _, _ ->
+                executarSincronizacaoManual()
+            }
+            .setNeutralButton("Copiar código") { _, _ ->
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipboard.setPrimaryClip(ClipData.newPlainText("Código UniFocus", codigoAtual))
+                Toast.makeText(this, "Código copiado: $codigoAtual", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Restaurar código") { _, _ ->
+                abrirDialogoTrocarCodigo()
+            }
+            .show()
+    }
+
+    private fun abrirDialogoTrocarCodigo() {
+        val paddingPx = (20 * resources.displayMetrics.density).toInt()
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(paddingPx, paddingPx / 2, paddingPx, 0)
+        }
+        val input = EditText(this).apply {
+            hint = "Ex.: UF-4K8M-9P2A-7X3Q"
+            setText(backupRepository.getSyncCode())
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+            setSelection(text.length)
+        }
+        container.addView(input)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Restaurar projetos da nuvem")
+            .setMessage("Informe o código de sincronização usado no outro aparelho:")
+            .setView(container)
+            .setPositiveButton("Restaurar") { _, _ ->
+                val digitado = input.text.toString()
+                if (!SyncCodeManager.isValid(digitado)) {
+                    Toast.makeText(
+                        this,
+                        "Informe um código válido (mínimo 6 caracteres).",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    backupRepository.setSyncCode(digitado)
+                    executarSincronizacaoManual()
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun executarSincronizacaoManual() {
+        Toast.makeText(this, "Sincronizando com o Supabase…", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            val result = backupRepository.syncAll()
+            val feedback = when {
+                !result.configured -> "Configure SUPABASE_URL e SUPABASE_ANON_KEY em SupabaseConfig.kt."
+                result.errorMessage != null -> result.errorMessage
+                result.uploaded == 0 && result.restored == 0 -> "Tudo já está sincronizado com a nuvem!"
+                else -> "Backup concluído: ${result.uploaded} enviado(s) e ${result.restored} restaurado(s)."
+            }
+            Toast.makeText(this@MainActivity, feedback, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -158,7 +262,7 @@ class MainActivity : AppCompatActivity() {
             text = if (projeto.isCompleted) getString(R.string.reopen) else getString(R.string.concluido)
             setOnClickListener {
                 lifecycleScope.launch {
-                    database.projectDao().update(projeto.copy(isCompleted = !projeto.isCompleted))
+                    backupRepository.updateAndBackup(projeto.copy(isCompleted = !projeto.isCompleted))
                 }
             }
         }
@@ -166,7 +270,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun millisEntrega(data: String): Long? = try {
-        val format = SimpleDateFormat("dd/MM/yyyy", Locale("pt", "BR")).apply { isLenient = false }
+        val format = SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("pt-BR")).apply { isLenient = false }
         if (data.isBlank()) null else format.parse(data)?.time
     } catch (_: Exception) {
         null

@@ -25,9 +25,10 @@
                         android:text="SEU ESPAÇO DE FOCO" android:textColor="@color/ink_secondary"
                         android:textSize="10sp" android:letterSpacing="0.16" />
                 </LinearLayout>
-                <TextView android:layout_width="40dp" android:layout_height="40dp"
+                <TextView android:id="@+id/btnCloudBackup" android:layout_width="wrap_content" android:layout_height="40dp"
                     android:background="@drawable/bg_purple_soft" android:gravity="center"
-                    android:text="✦" android:textSize="22sp" android:textColor="@color/brand"/>
+                    android:paddingHorizontal="14dp" android:clickable="true" android:focusable="true"
+                    android:text="@string/cloud_backup_badge" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/brand"/>
             </LinearLayout>
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="30dp" android:text="Faça acontecer."
